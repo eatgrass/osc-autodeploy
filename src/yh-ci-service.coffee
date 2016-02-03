@@ -9,6 +9,7 @@ app.use logger()
 router .post '/ci/oschina', bodyParser, ->
     console.log @request.body
     @body = "ok!"
+    return yield
 
 
 app.use router.routes()
