@@ -18,11 +18,13 @@ router .post '/ci/oschina', bodyParser, ->
 
 push = (data)->
     repository = data.repository.name
-    if data.ref is 'dev'
-        commits.forEach (commit)->
-            if commit.message.indexOf "deploy yh-mall for testing:" >=0
-                out = yield runScript "./scripts/Hello.sh"
-                console.log out
+    if data.ref is 'refs/heads/dev'
+        data.commits.forEach (commit)->
+            if (commit.message.indexOf "deploy yh-mall for testing:") >=0
+                process.execFile "./scripts/Hello.sh", (err,stdout,stderr)->
+                    console.log err if err
+                    console.log stdout if stdout
+                    console.log stderr if stderr
 
 
 #Thunkified child_process.execFile
