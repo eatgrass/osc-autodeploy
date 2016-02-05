@@ -1,0 +1,58 @@
+#Example Config
+example:
+    specs:
+        -
+            enable: true
+            branches:
+                - dev
+                - test
+            trigger: "test this plz"
+            script:
+                path: "Test.sh"
+                args:
+                    - args1
+                    - args2
+                options:
+                    - -v
+                    - --help
+        -
+            enable: true
+            trigger: "deploy this plz"
+            script:
+                path: "Deploy.sh"
+                args:
+                    - args1
+                    - args2
+                options:
+                    - -v
+                    - --help
+#####################################################
+yh-mall:
+    specs:
+        -
+            enable: true
+            branches:
+                - test
+            trigger: "test this plz"
+            script:
+                path: "Test.sh"
+                args:
+                    - args1
+                    - args2
+                options:
+                    - -v
+                    - --help
+        -
+            enable: ture
+            branches:
+                - master
+                - test
+            trigger: "deploy this plz"
+            script:
+                path: "Deploy.sh"
+                args:
+                    - args1
+                    - args2
+                options:
+                    - -v
+                    - --help

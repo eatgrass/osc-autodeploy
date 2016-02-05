@@ -2,40 +2,18 @@ koa = require 'koa'
 logger = require 'koa-logger'
 router = require('koa-router')()
 bodyParser = require('koa-body')()
-process = require 'child_process'
+oschina = require './services/oschina'
+oscRunner = require './runners/oschina'
 
 app = koa()
 app.use logger()
+osc_ci=oschina()
 
-router .post '/ci/oschina', bodyParser, ->
-    hook = JSON.parse @request.body.hook
-
-    if hook.hook_name is "push_hooks"
-        push hook.push_data
-
+router .post '/ci/oschina', osc_ci, ->
+    result = yield oscRunner.run @request.ciTasks
+    console.log result
     @body = "ok!"
     yield return
-
-push = (data)->
-    repository = data.repository.name
-    if data.ref is 'refs/heads/dev'
-        data.commits.forEach (commit)->
-            if (commit.message.indexOf "deploy yh-mall for testing:") >=0
-                process.execFile "./scripts/Hello.sh", (err,stdout,stderr)->
-                    console.log err if err
-                    console.log stdout if stdout
-                    console.log stderr if stderr
-
-
-#Thunkified child_process.execFile
-runScript = (file,args,options)->
-    (callback)->
-        process.execFile file, args, options, (err,stdout,stderr)->
-            unless err
-                callback null, {stdout : stdout, stderr : stderr}
-            else
-                callback err, null
-
 
 app.use router.routes()
 
